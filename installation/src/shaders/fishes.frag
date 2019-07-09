@@ -8,10 +8,13 @@ varying vec3 vDebug;
 varying vec3 vNormal;
 varying vec2 vTextureCoord;
 varying vec3 vUVOffset;
+varying vec3 vColor;
 
 uniform vec3 uColor;
 uniform sampler2D textureSkin;
 
+
+#define USE_COLORMAP 1
 #define DARK_BLUE vec3(32.0, 35.0, 40.0)/255.0
 
 
@@ -32,6 +35,15 @@ vec2 rotate(vec2 v, float a) {
 }
 
 
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+float luma(vec4 color) {
+  return dot(color.rgb, vec3(0.299, 0.587, 0.114));
+}
+
+
 #define LIGHT  vec3(0.0, 1.0, 0.0)
 #define PI 3.141592653
 
@@ -45,6 +57,7 @@ void main(void) {
 
 	d = mix(d, 1.0, .8);
 	color.rgb *= d;
+	float f = luma(color.rgb);
 
 	gl_FragColor = color;
 #else
@@ -52,5 +65,8 @@ void main(void) {
 	color        += pow(1.0 - d, 5.0) * 0.1;
 	gl_FragColor = vec4(color, 1.0);
 #endif
+
+
+	// gl_FragColor = vec4(vColor, 1.0);
 
 }

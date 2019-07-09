@@ -17,6 +17,7 @@ uniform float uFishScale;
 uniform float uTime;
 
 varying vec2 vTextureCoord;
+varying vec2 vUV;
 varying vec3 vNormal;
 varying vec3 vDebug;
 varying vec3 vUVOffset;
@@ -74,4 +75,8 @@ void main(void) {
 	vDebug = vec3(g);
 
 	vUVOffset = aUVOffset;
+
+
+	vec2 uv = aVertexPosition.xz;
+	vUV = uv * 1.2;
 }

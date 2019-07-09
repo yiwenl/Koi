@@ -5,6 +5,7 @@ import Assets from './Assets';
 import Config from './Config';
 import vs from 'shaders/fishes.vert';
 import fs from 'shaders/fishes.frag';
+import getColorTheme from 'get-color-themes';
 
 
 var random = function(min, max) { return min + Math.random() * (max - min);	}
@@ -19,6 +20,7 @@ class ViewFish extends alfrid.View {
 	_init() {
 		const uvs = [];
 		const uvOffset = [];
+		const colors = [];
 
 		const { numParticles:num } = Config;
 		const n = 4;
@@ -47,6 +49,26 @@ class ViewFish extends alfrid.View {
 		this.textureSkin = Assets.get('ink');
 		this.textureSkin.minFilter = this.textureSkin.magFilter = GL.LINEAR_MIPMAP_NEAREST;
 		this.textureSkin.wrapS = this.textureSkin.wrapT = GL.MIRRORED_REPEAT;
+
+		this.changeColor()
+
+		setTimeout(()=> {
+			gui.add(this, 'changeColor');
+		}, 500)
+	}
+
+	changeColor() {
+		const colorThemes = getColorTheme();
+		console.log('colorThemes', colorThemes);
+
+		const colors = [];
+
+		colorThemes.forEach( c => {
+			colors.push(c[0], c[1], c[2]);
+		})
+
+		this.shader.bind();
+		this.shader.uniform("uColors", "vec3", colors);
 	}
 
 

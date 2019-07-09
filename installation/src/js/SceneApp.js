@@ -7,8 +7,10 @@ import Settings from './Settings';
 import Config from './Config';
 
 import KoiSimulation from './KoiSimulation';
+import KoiSimulation2 from './KoiSimulation2';
 import ViewFloor from './ViewFloor';
 import ViewFish from './ViewFish';
+import ViewDebug from './ViewDebug';
 
 let TARGET_SERVER_IP = 'localhost';
 let socket = require('./libs/socket.io-client')(TARGET_SERVER_IP + ':9876');	
@@ -24,10 +26,11 @@ class SceneApp extends Scene {
 		// this.orbitalControl.rx.value = this.orbitalControl.ry.value = 0.3;
 		this.orbitalControl.rx.limit(0.2, Math.PI / 2);
 		this.orbitalControl.rx.value = Math.PI * 0.5;
-		this.orbitalControl.radius.value = 10;
+		this.orbitalControl.radius.value = 5;
 		// this.orbitalControl.radius.limit(5, 10);
 
 		this._koiSim = new KoiSimulation();
+		this._koiSim2 = new KoiSimulation2();
 
 
 
@@ -114,6 +117,7 @@ class SceneApp extends Scene {
 
 		this._vFloor = new ViewFloor();
 		this._vFishes = new ViewFish();
+		this._vDebug = new ViewDebug();
 	}
 
 
@@ -125,7 +129,7 @@ class SceneApp extends Scene {
 		this._fboShadow.bind();
 		GL.clear(1, 0, 0, 1);
 		GL.setMatrices(this._cameraLight);
-		this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
+		// this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
 		this._fboShadow.unbind();
 
 	}
@@ -134,6 +138,7 @@ class SceneApp extends Scene {
 	render() {
 		//	update fish position
 		this._koiSim.update(this._hit, this._touchForce.value, this._center);
+		this._koiSim2.update(this._hit, this._touchForce.value, this._center);
 
 		this.renderShadow();
 
@@ -141,16 +146,26 @@ class SceneApp extends Scene {
 		GL.setMatrices(this.camera);
 
 		if(Config.hideFloor) {
-			this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
-			this._vFloor.render(this._shadowMatrix, this._fboShadow.getDepthTexture());	
+			// this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
+			// this._vFloor.render(this._shadowMatrix, this._fboShadow.getDepthTexture());	
 		}else {
-			this._vFloor.render(this._shadowMatrix, this._fboShadow.getDepthTexture());	
-			this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
+			// this._vFloor.render(this._shadowMatrix, this._fboShadow.getDepthTexture());	
+			// this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
 		}
 		
 
+		this._vDebug.render(this._koiSim2.texturePos);
+
 		let s = 0.1 * this._touchForce.value;
 		this._bBall.draw(this._touch, [s, s, s], [1, 1, 1]);
+
+
+		s = 200;
+		GL.viewport(0, 0, s, s);
+		this._bCopy.draw(this._koiSim2.texturePos);
+		
+		GL.viewport(s, 0, s, s);
+		this._bCopy.draw(this._koiSim2.textureExtra);
 
 		// s = Config.numParticles * 4;
 		// GL.viewport(0, 0, s * 2, s);

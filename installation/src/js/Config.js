@@ -1,7 +1,7 @@
 // Config.js
 
 export default {
-	numParticles:8,
+	numParticles:10,
 	maxRadius: 10,
 	hideFloor:false,
 	fish: {

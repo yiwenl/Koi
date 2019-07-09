@@ -15,6 +15,8 @@ uniform float uDrawForce;
 uniform float uFishCapY;
 
 
+// #define uDrawDistance 10.0
+
 vec3 mod289(vec3 x) {	return x - floor(x * (1.0 / 289.0)) * 289.0;	}
 
 vec4 mod289(vec4 x) {	return x - floor(x * (1.0 / 289.0)) * 289.0;	}
@@ -167,7 +169,7 @@ void main(void) {
 
 		//	prevent going over
 		d = length(pos.xz);
-		float r = uMaxRadius * 0.25;
+		float r = uMaxRadius * 1.0;
 		if(d > r) {
 			float f = (d - r) * 0.7;
 			vec2 dir = normalize(pos.xz);
@@ -175,9 +177,9 @@ void main(void) {
 		}
 
 		float speed = mix(extra.b, 1.0, .14);
-		vel += acc * 0.002 * speed;
+		vel += acc * 0.001 * speed * 0.5;
 
-		float decreaseRate = 0.99;
+		float decreaseRate = 0.98;
 		vel *= decreaseRate;
 
 		color = vel;

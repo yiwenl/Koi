@@ -47,6 +47,8 @@ class ViewFish extends alfrid.View {
 		this.textureSkin = Assets.get('ink');
 		this.textureSkin.minFilter = this.textureSkin.magFilter = GL.LINEAR_MIPMAP_NEAREST;
 		this.textureSkin.wrapS = this.textureSkin.wrapT = GL.MIRRORED_REPEAT;
+
+		this.textureAO = Assets.get('aoFish')
 	}
 
 
@@ -64,6 +66,9 @@ class ViewFish extends alfrid.View {
 
 		this.shader.uniform("textureSkin", "uniform1i", 2);
 		this.textureSkin.bind(2);
+
+		this.shader.uniform("textureAO", "uniform1i", 3);
+		this.textureAO.bind(3);
 
 		this.shader.uniform(Config.fish);
 		GL.draw(this.mesh);

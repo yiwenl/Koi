@@ -8,11 +8,13 @@ precision highp float;
 varying vec3 vDebug;
 varying vec3 vNormal;
 varying vec2 vTextureCoord;
+varying vec2 vUV;
 varying vec3 vUVOffset;
 
 uniform vec3 uColor;
 uniform float uUseTexture;
 uniform sampler2D textureSkin;
+uniform sampler2D textureAO;
 
 #define DARK_BLUE vec3(32.0, 35.0, 40.0)/255.0
 
@@ -40,7 +42,7 @@ vec2 rotate(vec2 v, float a) {
 void main(void) {
 	float d      = diffuse(vNormal, LIGHT);
 
-	vec2 uv = rotate(vTextureCoord, vUVOffset.z * PI * 2.0);
+	vec2 uv = rotate(vUV, vUVOffset.z * PI * 2.0);
 	uv = uv * 0.25 + vUVOffset.xy;
 	vec4 color = texture2D(textureSkin, uv);
 
@@ -50,5 +52,10 @@ void main(void) {
 	vec3 colorBW   = DARK_BLUE;
 	colorBW        += pow(1.0 - d, 5.0) * 0.1;
 	gl_FragColor = mix(vec4(colorBW, 1.0), color, uUseTexture);
+
+	float ao = texture2D(textureAO, vTextureCoord).r;
+	gl_FragColor.rgb *= ao;
+
+	// gl_FragColor = texture2D(textureAO, vTextureCoord);
 
 }

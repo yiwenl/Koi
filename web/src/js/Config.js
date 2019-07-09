@@ -3,6 +3,7 @@
 export default {
 	numParticles:8,
 	maxRadius: 10,
+	roomScale:10,
 	hideFloor:false,
 	useTexture:false,
 	backgroundColor:[255, 255, 255],

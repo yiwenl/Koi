@@ -9,6 +9,7 @@ import Config from './Config';
 import KoiSimulation from './KoiSimulation';
 import ViewFloor from './ViewFloor';
 import ViewFish from './ViewFish';
+import ViewRoom from './ViewRoom';
 
 class SceneApp extends Scene {
 	constructor() {
@@ -16,11 +17,13 @@ class SceneApp extends Scene {
 
 		super();
 		this.resize();
+		GL.enable(GL.CULL_FACE);
 		GL.enableAlphaBlending();
 		this.orbitalControl.rx.value = this.orbitalControl.ry.value = 0.3;
 		this.orbitalControl.rx.limit(0.2, Math.PI / 2);
 		// this.orbitalControl.rx.value = Math.PI * 0.5;
-		this.orbitalControl.radius.value = 8;
+		this.orbitalControl.radius.value = 10;
+		this.orbitalControl.center[1] = 2;
 		// this.orbitalControl.radius.limit(5, 10);
 
 		this._koiSim = new KoiSimulation();
@@ -46,23 +49,23 @@ class SceneApp extends Scene {
 
 
 		alfrid.Scheduler.delay(()=> {
-			gui.add(Config, 'numParticles', 1, 32).name('Number of fishes').step(1).onFinishChange(Settings.reload);
-			gui.add(Config.fish, 'uFishScale', 0, 2).name('Fish Scale').onChange(Settings.refresh);
-			// gui.addColor(Config.fish, 'uColor').name('Fish Color').onChange(Settings.refresh);
-			// gui.add(Config.simulation, 'uDrawDistance', 0, 5).onChange(Settings.refresh);
-			// gui.add(Config.simulation, 'uDrawForce', 0, 10).onChange(Settings.refresh);
-			// gui.add(Config.simulation, 'uFishCapY', 0, 1).onChange(Settings.refresh);
+			// gui.add(Config, 'numParticles', 1, 32).name('Number of fishes').step(1).onFinishChange(Settings.reload);
+			// gui.add(Config.fish, 'uFishScale', 0, 2).name('Fish Scale').onChange(Settings.refresh);
 
-			// gui.add(Config.simulation, 'uRadius', 0, 5).onChange(Settings.refresh);
-			// gui.add(Config.simulation, 'uMinThreshold', 0, 1).onChange(Settings.refresh);
-			// gui.add(Config.simulation, 'uMaxThreshold', 0, 1).onChange(Settings.refresh);
-
-			gui.add(Config, 'hideFloor').onChange(Settings.refresh);
-			gui.add(Config, 'useTexture').onChange(Settings.refresh);
-			gui.add(Config, 'renderBall').onChange(Settings.refresh);
-			gui.addColor(Config, 'backgroundColor').onFinishChange(Settings.refresh);
+			// gui.add(Config, 'roomScale', 1, 20).step(1).onChange(Settings.refresh);
+			// gui.add(Config, 'hideFloor').onChange(Settings.refresh);
+			// gui.add(Config, 'useTexture').listen().onChange(Settings.refresh);
+			// gui.add(Config, 'renderBall').onChange(Settings.refresh);
+			// gui.addColor(Config, 'backgroundColor').onFinishChange(Settings.refresh);
 			
 		}, null, 500);
+
+
+		window.addEventListener('keydown', (e)=> {
+			if(e.keyCode === 32) {
+				Config.useTexture = !Config.useTexture;
+			}
+		})
 
 
 		//	touch detection
@@ -104,6 +107,7 @@ class SceneApp extends Scene {
 
 		this._vFloor = new ViewFloor();
 		this._vFishes = new ViewFish();
+		this._vRoom = new ViewRoom();
 	}
 
 
@@ -127,8 +131,10 @@ class SceneApp extends Scene {
 
 		this.renderShadow();
 
-		GL.clear(Config.backgroundColor[0]/255, Config.backgroundColor[1]/255, Config.backgroundColor[2]/255, 1);
+		// GL.clear(Config.backgroundColor[0]/255, Config.backgroundColor[1]/255, Config.backgroundColor[2]/255, 1);
+		GL.clear(0, 0, 0, 0);
 		GL.setMatrices(this.camera);
+
 
 		if(Config.hideFloor) {
 			this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);

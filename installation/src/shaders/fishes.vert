@@ -15,17 +15,34 @@ uniform sampler2D texture;
 uniform sampler2D textureExtra;
 uniform float uFishScale;
 uniform float uTime;
+uniform vec3 uColors[5];
 
 varying vec2 vTextureCoord;
 varying vec3 vNormal;
 varying vec3 vDebug;
 varying vec3 vUVOffset;
+varying vec3 vColor;
 
 vec2 rotate(vec2 v, float a) {
 	float s = sin(a);
 	float c = cos(a);
 	mat2 m = mat2(c, -s, s, c);
 	return m * v;
+}
+
+
+vec3 getColor(float index) {
+	if(index < 0.5) {
+		return uColors[0];
+	} else if(index < 1.5) {
+		return uColors[1];
+	} else if(index < 2.5) {
+		return uColors[2];
+	} else if(index < 3.5) {
+		return uColors[3];
+	} else {
+		return uColors[4];
+	}
 }
 
 #define PI 3.141592653
@@ -39,7 +56,7 @@ void main(void) {
 	float s = 0.8;
 	g = mod(aVertexPosition.x + s + 0.1, s * 2.0);
 
-	vec3 pos = aVertexPosition;
+	vec3 pos = aVertexPosition * 1.1;
 
 	float t = length(vel.xz);
 	float thetaY = atan(vel.y, t);
@@ -74,4 +91,5 @@ void main(void) {
 	vDebug = vec3(g);
 
 	vUVOffset = aUVOffset;
+	vColor = getColor(aUVOffset.z * 5.0);
 }
