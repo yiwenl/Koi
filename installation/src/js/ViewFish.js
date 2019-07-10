@@ -28,7 +28,7 @@ class ViewFish extends alfrid.View {
 
 		for(let i=0; i<num; i++) {
 			for(let j=0; j<num; j++) {
-				let uv = [i/num * 0.5, j/num];
+				let uv = [i/num, j/num];
 				uvs.push(uv);
 
 				let t = Math.floor(Math.random() * 16);
@@ -73,7 +73,7 @@ class ViewFish extends alfrid.View {
 	}
 
 
-	render(texture, textureExtra) {
+	render(texture, textureExtra, textureVel) {
 		this.shader.bind();
 		this.shader.uniform("uTime", "float", alfrid.Scheduler.deltaTime);
 		this.shader.uniform("uSolidColor", "float", Config.useSolidColor ? 1.0 : 0.0);
@@ -86,6 +86,9 @@ class ViewFish extends alfrid.View {
 
 		this.shader.uniform("textureSkin", "uniform1i", 2);
 		this.textureSkin.bind(2);
+
+		this.shader.uniform("textureVel", "uniform1i", 3);
+		textureVel.bind(3);
 
 		this.shader.uniform(Config.fish);
 		GL.draw(this.mesh);

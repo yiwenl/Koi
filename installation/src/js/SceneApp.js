@@ -158,7 +158,8 @@ class SceneApp extends Scene {
 		GL.clear(0, 0, 0, 0);
 		GL.setMatrices(this.camera);
 
-		this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
+		// this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
+		this._vFishes.render(this._koiSim2.texturePos, this._koiSim2.textureExtra, this._koiSim2.textureVel);
 		
 		
 
