@@ -1,7 +1,7 @@
 import '../scss/global.scss';
 import debugPolyfill from './debug/debugPolyfill';
 import alfrid, { GL } from 'alfrid';
-import SceneApp from './SceneApp';
+// import SceneApp from './SceneApp';
 import AssetsLoader from 'assets-loader';
 import Settings from './Settings';
 import assets from './asset-list';
@@ -60,28 +60,25 @@ function _onImageLoaded(o) {
 
 
 function _init3D() {
-	console.log('IS_DEVELOPMENT', !!window.isDevelopment);
-	if(window.isDevelopment) { 
-		Settings.init();	 
-	}
+	let TARGET_SERVER_IP = '192.168.1.69';
+	let socket = require('./libs/socket.io-client')(TARGET_SERVER_IP + ':9876');	
+	window.socket = socket;
 
-	//	CREATE CANVAS
-	const canvas = document.createElement('canvas');
-	const container = document.body.querySelector('.container');
-	canvas.className = 'Main-Canvas';
-	container.appendChild(canvas);
+	const btnUseTexture = document.body.querySelector('.useTexture');
+	const btnUseColor = document.body.querySelector('.useColor');
+	const btnChangeColor = document.body.querySelector('.changeColor');
 
-	//	INIT 3D TOOL
-	GL.init(canvas, {ignoreWebgl2:true, preserveDrawingBuffer:true});
 
-	//	INIT ASSETS
-	Assets.init();
+	btnUseTexture.addEventListener('click', () => {
+		socket.emit('useTexture');
+	});
 
-	//	CREATE SCENE
-	const scene = new SceneApp();
+	btnUseColor.addEventListener('click', () => {
+		socket.emit('useColor');
+	});
 
-	if(window.isDevelopment) { 
-		addControls(scene);
-	}
+	btnChangeColor.addEventListener('click', () => {
+		socket.emit('changeColor');
+	});
 	
 }

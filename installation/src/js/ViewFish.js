@@ -54,6 +54,7 @@ class ViewFish extends alfrid.View {
 
 		setTimeout(()=> {
 			gui.add(this, 'changeColor');
+			gui.add(Config, 'useSolidColor');
 		}, 500)
 	}
 
@@ -75,6 +76,7 @@ class ViewFish extends alfrid.View {
 	render(texture, textureExtra) {
 		this.shader.bind();
 		this.shader.uniform("uTime", "float", alfrid.Scheduler.deltaTime);
+		this.shader.uniform("uSolidColor", "float", Config.useSolidColor ? 1.0 : 0.0);
 
 		this.shader.uniform("texture", "uniform1i", 0);
 		texture.bind(0);

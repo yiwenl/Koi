@@ -28,6 +28,36 @@ receiver.on('/position', function(x, y) {
 });
 
 
+
+
+io.on('connection', (socket)=>_onConnected(socket));
+
+function _onConnected(socket) {
+	console.log('A user is connected : ', socket.id);
+	socket.on('disconnect', ()=>_onDisconnected() );
+
+	socket.on('useTexture', ()=>{
+		console.log('useTexture');
+		io.emit('useTexture');
+	});
+
+	socket.on('useColor', ()=>{
+		console.log('useColor');
+		io.emit('useColor');
+	});
+
+	socket.on('changeColor', ()=>{
+		console.log('changeColor');
+		io.emit('changeColor');
+	});
+}
+
+
+
+function _onDisconnected() {
+	console.log(' A user has disconnected');
+}
+
 /*
 
 x : 50 ~ 

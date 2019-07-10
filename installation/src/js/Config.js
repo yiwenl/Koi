@@ -15,5 +15,6 @@ export default {
 		uRadius:2.0,
 		uMinThreshold:0.3,
 		uMaxThreshold:0.7
-	}
+	},
+	useSolidColor:false
 };

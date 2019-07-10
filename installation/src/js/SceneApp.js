@@ -98,6 +98,19 @@ class SceneApp extends Scene {
 			vec3.set(this._touch, o.x * r, 1, o.y * r);
 			this._touchForce.value = 1;
 		});
+
+
+		socket.on('useTexture', () => {
+			Config.useSolidColor = false;
+		});
+
+		socket.on('useColor', () => {
+			Config.useSolidColor = true;
+		});
+
+		socket.on('changeColor', () => {
+			this._vFishes.changeColor();
+		});
 	}
 
 	_initTextures() {
@@ -145,16 +158,11 @@ class SceneApp extends Scene {
 		GL.clear(0, 0, 0, 0);
 		GL.setMatrices(this.camera);
 
-		if(Config.hideFloor) {
-			// this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
-			// this._vFloor.render(this._shadowMatrix, this._fboShadow.getDepthTexture());	
-		}else {
-			// this._vFloor.render(this._shadowMatrix, this._fboShadow.getDepthTexture());	
-			// this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
-		}
+		this._vFishes.render(this._koiSim.texture, this._koiSim.textureExtra);
+		
 		
 
-		this._vDebug.render(this._koiSim2.texturePos);
+		// this._vDebug.render(this._koiSim2.texturePos);
 
 		let s = 0.1 * this._touchForce.value;
 		this._bBall.draw(this._touch, [s, s, s], [1, 1, 1]);
